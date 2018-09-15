@@ -1,7 +1,9 @@
+package apijava.search.binarysearch;
+
 import java.security.Key;
 import java.util.NoSuchElementException;
+import apijava.stackandqueue.Queue;
 
-import com.sun.corba.se.impl.orbutil.graph.Node;
 
 public class BST<Key extends Comparable<Key>, Value > {
     public Node root;
@@ -10,7 +12,7 @@ public class BST<Key extends Comparable<Key>, Value > {
         public Key key; // sorted by key
         private Value value; // sorted by value
         private Node left, right; // left and right subtrees
-        private int size; // number node in subtree
+        public int size; // number node in subtree
 
         public Node(Key key, Value value, int size) {
             this.key = key;
@@ -313,7 +315,7 @@ public class BST<Key extends Comparable<Key>, Value > {
         if (cmp == 0)
             return x;
         if (cmp < 0) {
-            Node t = celling(x.left, key);
+            Node t = ceilling(x.left, key);
             if (t != null)
                 return t;
             else
@@ -334,7 +336,7 @@ public class BST<Key extends Comparable<Key>, Value > {
      */
 
     public Key select(int k) {
-        if (k < 0 || k >= size) {
+        if (k < 0 || k >= size()) {
             throw new IllegalArgumentException("argument to select() is invalid " + k);
         }
         Node x = select(root, k);
@@ -493,7 +495,10 @@ public class BST<Key extends Comparable<Key>, Value > {
     *  Check integrity of BST data structure.
     ***************************************************************************/
     private boolean check() {
-        if (!isBST())
+        if (!isBST())            System.out.println("Not in symmetric order");
+        if (!isSizeConsistent()) System.out.println("Subtree counts not consistent");
+        if (!isRankConsistent()) System.out.println("Ranks not consistent");
+        return isBST() && isSizeConsistent() && isRankConsistent();
     }
 
     /**
@@ -543,9 +548,4 @@ public class BST<Key extends Comparable<Key>, Value > {
         return true;
     }
 
-    /**
-     * Returns the keys in the BST in level order (for debugging).
-     *
-     * @return the keys in the BST in level order traversal
-     */
 }
